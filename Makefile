@@ -1,4 +1,5 @@
 start:
+	open https://cloud.redhat.com/openshift/install/crc/installer-provisioned
 	crc start
 	eval $(crc oc-env)
 	oc login -u developer -p developer https://api.crc.testing:6443
@@ -12,7 +13,7 @@ delete:
 console:
 	open https://console-openshift-console.apps-crc.testing 
 
-project:
+new_project:
 	oc new-project hello-project
 
 app:
@@ -20,7 +21,7 @@ app:
 	oc new-app hello
 	oc expose svc/hello
 
-delete:
+delete_project:
 	oc delete all --all
 
 deploy:
