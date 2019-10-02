@@ -27,4 +27,15 @@ delete_project:
 deploy:
 	kubectl create deployment hello-node --image=localhost:5000/hello
 
+registry:
+	oc policy add-role-to-user registry-viewer "kube:admin"
+	oc policy add-role-to-user registry-editor "kube:admin"
+	#oc login -u kubeadmin -p $$(oc whoami -t)  default-route-openshift-image-registry.apps-crc.testing
+	oc project openshift-image-registry
+
+push:
+	docker tag hello openshift-image-registry/hello-project/hello 
+	docker push openshift-image-registry/hello-project/hello 
+	#docker tag hello default-route-openshift-image-registry.apps-crc.testing/hello-project/hello 
+	#docker push default-route-openshift-image-registry.apps-crc.testing/hello-project/hello 
 
