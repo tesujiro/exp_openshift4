@@ -1,6 +1,7 @@
 MODULE=hello
 TARGET_OS=linux
-REPO="localhost:5000"
+#REPO="localhost:5000"
+REPO="tesujiro"
 
 all:
 	go build -o $(MODULE)
