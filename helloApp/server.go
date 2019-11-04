@@ -20,7 +20,7 @@ func newServer() *server {
 func main() {
 	p := flag.Int("p", 80, "port number")
 	flag.Parse()
-	addr := fmt.Sprintf("localhost:%d", *p)
+	addr := fmt.Sprintf(":%d", *p)
 
 	s := newServer()
 	s.routes()
