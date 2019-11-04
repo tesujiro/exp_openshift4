@@ -1,7 +1,8 @@
 MODULE=hello
 TARGET_OS=linux
 #REPO="localhost:5000"
-REPO="tesujiro"
+#Docker hub repository
+REPO=tesujiro
 
 all:
 	go build -o $(MODULE)

@@ -20,6 +20,7 @@ grant_all: login_kubeadmin
 	oc adm policy add-scc-to-user anyuid -z default
 
 run_hello: login_developer
+	## RUN FROM Docker Hub.
 	oc run hello --port=80 --expose --image=tesujiro/hello
 	oc get po -w
 
