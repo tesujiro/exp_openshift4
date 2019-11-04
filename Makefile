@@ -8,19 +8,16 @@ login_developer:
 	oc login -u developer -p developer https://api.crc.testing:6443
 
 login_kubeadmin:
-	oc login -u kubeadmin -p BMLkR-NjA28-v7exC-8bwAk https://api.crc.testing:6443
-
-stop:
-	crc stop
-
-delete:
-	crc delete
+	oc login -u kubeadmin https://api.crc.testing:6443
 
 console:
 	open https://console-openshift-console.apps-crc.testing 
 
-project:
+project: login_developer
 	oc new-project hello-project
+
+grant_all: login_kubeadmin
+	oc adm policy add-scc-to-user anyuid -z default
 
 run_hello: login_developer
 	oc run hello --port=80 --expose --image=tesujiro/hello
@@ -30,7 +27,10 @@ expose_hello:
 	oc expose svc hello
 
 sh_hello:
-	oc exec $$( oc get po | grep -v deploy | grep -v NAME | awk '{print $$1}') -it /bin/sh
+	oc exec $$( oc get po | grep hello | grep -v deploy | awk '{print $$1}') -it /bin/sh
+
+test_hello:
+	curl -L $$( oc get route | grep hello | awk '{print $$2}'):80
 
 delete_hello:
 	oc delete all -l run=hello
@@ -41,6 +41,12 @@ delete_project:
 	oc project hello-project
 	oc delete all --all
 	oc delete project hello-project
+
+stop_cluster:
+	crc stop
+
+delete_cluster:
+	crc delete
 
 ##############################################################################################################
 ## 以下はメモ
