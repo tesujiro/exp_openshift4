@@ -19,15 +19,37 @@ delete:
 console:
 	open https://console-openshift-console.apps-crc.testing 
 
+project:
+	oc new-project hello-project
+
+run_hello: login_developer
+	oc run hello --port=80 --expose --image=tesujiro/hello
+	oc get po -w
+
+expose_hello:
+	oc expose svc hello
+
+sh_hello:
+	oc exec $$( oc get po | grep -v deploy | grep -v NAME | awk '{print $$1}') -it /bin/sh
+
+delete_hello:
+	oc delete all -l run=hello
+	oc delete service/hello route.route.openshift.io/hello
+	oc get all
+
+delete_project:
+	oc project hello-project
+	oc delete all --all
+	oc delete project hello-project
+
+##############################################################################################################
+## 以下はメモ
+##############################################################################################################
 grant:
 	oc adm policy add-scc-to-user anyuid -z default
 	oc adm policy add-scc-to-user anyuid -z default --as=system:admin
-	# https://access.redhat.com/documentation/ja-jp/openshift_container_platform/4.1/pdf/registry/OpenShift_Container_Platform-4.1-Registry-ja-JP.pdf
 	oc policy add-role-to-user registry-viewer developer
 	oc policy add-role-to-user registry-editor developer
-
-project:
-	oc new-project hello-project
 
 deploy_dertificate:
 	#docker login -u kubeadmin -p $$(oc whoami -t)  default-route-openshift-image-registry.apps-crc.testing
@@ -75,11 +97,6 @@ show_openshift_registry:
 	oc project openshift-image-registry
 	oc get svc
 	oc get route
-
-delete_project:
-	oc project hello-project
-	oc delete all --all
-	oc delete project hello-project
 
 deploy:
 	#kubectl create deployment hello-node --image=localhost:5000/hello
